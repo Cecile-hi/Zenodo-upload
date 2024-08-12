@@ -12,3 +12,5 @@ Example:
 ```python
 python zenodo-upload.py --id 10996591 --dir ./ADD_2022
 ```
+
+If you think this toolkit is useful, pls star it.
