@@ -8,7 +8,7 @@ import argparse
 
 # Constants
 ZENODO_API_URL = "https://zenodo.org/api/deposit/depositions"
-ACCESS_TOKEN = "Your token"
+ACCESS_TOKEN = "Your Token"
 HEADERS = {"Content-Type": "application/json"}
 
 
@@ -69,13 +69,7 @@ def main(deposition_id, directory, overwrite=False):
         print(f"Created new deposition with ID: {deposition_id}.")
         bucket_url = deposition["links"]["bucket"]
 
-    files = sorted(
-        [
-            os.path.join(directory, f)
-            for f in os.listdir(directory)
-            if os.path.isfile(os.path.join(directory, f))
-        ]
-    )
+    files = sorted([str(f) for f in Path(directory).rglob('*') if f.is_file()])
 
     if not overwrite:
         existing_files = [f["filename"] for f in deposition["files"]]
@@ -102,6 +96,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--dir", type=str, required=True, help="Directory containing the files", dest="directory"
     )
+    parser.add_argument(
+        "--overwrite", type=bool, default=False, help="T/F overwrite your file in current deposition with same name"
+    )
     args = parser.parse_args()
 
-    main(args.deposition_id, args.directory)
+    main(args.deposition_id, args.directory, args.overwrite)
